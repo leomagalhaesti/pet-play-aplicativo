@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as ChatRouteImport } from './routes/chat'
 import { Route as MapaRouteImport } from './routes/mapa'
 import { Route as PerfilRouteImport } from './routes/perfil'
@@ -19,6 +20,11 @@ import { Route as ChatConversaIdRouteImport } from './routes/chat.$conversaId'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CadastroRoute = CadastroRouteImport.update({
+  id: '/cadastro',
+  path: '/cadastro',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ChatRoute = ChatRouteImport.update({
@@ -49,6 +55,7 @@ const ChatConversaIdRoute = ChatConversaIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/cadastro': typeof CadastroRoute
   '/chat': typeof ChatRouteWithChildren
   '/mapa': typeof MapaRoute
   '/perfil': typeof PerfilRoute
@@ -57,6 +64,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/cadastro': typeof CadastroRoute
   '/mapa': typeof MapaRoute
   '/perfil': typeof PerfilRoute
   '/chat/$conversaId': typeof ChatConversaIdRoute
@@ -65,6 +73,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/cadastro': typeof CadastroRoute
   '/chat': typeof ChatRouteWithChildren
   '/mapa': typeof MapaRoute
   '/perfil': typeof PerfilRoute
@@ -74,12 +83,19 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/chat' | '/mapa' | '/perfil' | '/chat/$conversaId' | '/chat/'
+    | '/'
+    | '/cadastro'
+    | '/chat'
+    | '/mapa'
+    | '/perfil'
+    | '/chat/$conversaId'
+    | '/chat/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/mapa' | '/perfil' | '/chat/$conversaId' | '/chat'
+  to: '/' | '/cadastro' | '/mapa' | '/perfil' | '/chat/$conversaId' | '/chat'
   id:
     | '__root__'
     | '/'
+    | '/cadastro'
     | '/chat'
     | '/mapa'
     | '/perfil'
@@ -89,6 +105,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CadastroRoute: typeof CadastroRoute
   ChatRoute: typeof ChatRouteWithChildren
   MapaRoute: typeof MapaRoute
   PerfilRoute: typeof PerfilRoute
@@ -101,6 +118,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cadastro': {
+      id: '/cadastro'
+      path: '/cadastro'
+      fullPath: '/cadastro'
+      preLoaderRoute: typeof CadastroRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/chat': {
@@ -155,6 +179,7 @@ const ChatRouteWithChildren = ChatRoute._addFileChildren(ChatRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CadastroRoute: CadastroRoute,
   ChatRoute: ChatRouteWithChildren,
   MapaRoute: MapaRoute,
   PerfilRoute: PerfilRoute,
