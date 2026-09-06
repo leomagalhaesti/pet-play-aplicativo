@@ -25,7 +25,7 @@ export const Route = createFileRoute("/mapa")({
 });
 
 function MapaPage() {
-  const [ativo, setAtivo] = useState(petPoints[0].id);
+  const [ativo, setAtivo] = useState(petPoints[0]!.id);
   const [checkin, setCheckin] = useState<string | null>(null);
   const ponto = petPoints.find((p) => p.id === ativo)!;
 

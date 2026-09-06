@@ -3,7 +3,7 @@ import { AppShell, AppHeader } from "@/components/AppShell";
 import { conversas } from "@/lib/pets";
 import { ShieldCheck } from "lucide-react";
 
-export const Route = createFileRoute("/chat")({
+export const Route = createFileRoute("/chat/")({
   head: () => ({
     meta: [
       { title: "Conversas — chat seguro após o match" },
