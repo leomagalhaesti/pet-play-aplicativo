@@ -1,10 +1,11 @@
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import { Heart, MapPinned, MessageCircle, CircleUser } from "lucide-react";
+import { Heart, MapPinned, MessageCircle, CircleUser, HeartPulse } from "lucide-react";
 
 const tabs = [
   { to: "/", label: "match", Icon: Heart },
   { to: "/mapa", label: "mapa", Icon: MapPinned },
+  { to: "/saude", label: "saúde", Icon: HeartPulse },
   { to: "/chat", label: "chat", Icon: MessageCircle },
   { to: "/perfil", label: "perfil", Icon: CircleUser },
 ] as const;
