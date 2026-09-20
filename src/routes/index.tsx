@@ -2,8 +2,15 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { AppShell } from "@/components/AppShell";
 import { PetCard } from "@/components/PetCard";
-import { pets, type Modo } from "@/lib/pets";
+import { pets, compatibilidade, meuPet, type Modo, type Estilo } from "@/lib/pets";
 import { Heart, RotateCcw, Star, SlidersHorizontal } from "lucide-react";
+
+const estilos: Estilo[] = [
+  "Corre com bolinha",
+  "Brinca forte",
+  "Explorador tranquilo",
+  "Calmo/Idoso",
+];
 
 export const Route = createFileRoute("/")({
   head: () => ({
