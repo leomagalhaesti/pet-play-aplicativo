@@ -2,8 +2,15 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { AppShell } from "@/components/AppShell";
 import { PetCard } from "@/components/PetCard";
-import { pets, type Modo } from "@/lib/pets";
+import { pets, compatibilidade, meuPet, type Modo, type Estilo } from "@/lib/pets";
 import { Heart, RotateCcw, Star, SlidersHorizontal } from "lucide-react";
+
+const estilos: Estilo[] = [
+  "Corre com bolinha",
+  "Brinca forte",
+  "Explorador tranquilo",
+  "Calmo/Idoso",
+];
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -30,8 +37,18 @@ function MatchPage() {
   const [indice, setIndice] = useState(0);
   const [curtidas, setCurtidas] = useState<string[]>([]);
 
-  const lista = useMemo(() => pets.filter((p) => p.modos.includes(modo)), [modo]);
-  const pet = lista[indice % lista.length];
+  const [soCompativeis, setSoCompativeis] = useState(true);
+  const [estilo, setEstilo] = useState<Estilo | null>(null);
+
+  const lista = useMemo(() => {
+    const base = pets
+      .filter((p) => p.modos.includes(modo))
+      .filter((p) => (estilo ? p.estilo === estilo : true))
+      .filter((p) => (soCompativeis ? compatibilidade(p) >= 70 : true));
+    return base.sort((a, b) => compatibilidade(b) - compatibilidade(a));
+  }, [modo, estilo, soCompativeis]);
+
+  const pet = lista.length ? lista[indice % lista.length] : undefined;
 
   const avancar = (curtiu: boolean) => {
     if (curtiu && pet) setCurtidas((c) => [...new Set([...c, pet.id])]);
@@ -90,23 +107,53 @@ function MatchPage() {
       </div>
 
       <div className="mt-3 flex gap-2 overflow-x-auto px-5 pb-1 text-[11px]">
-        <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-panel-2 px-3 py-1 text-cream ring-1 ring-line">
-          <SlidersHorizontal className="size-3" /> Filtros
-        </span>
-        <span className="shrink-0 rounded-full bg-panel-2 px-3 py-1 text-cream-dim ring-1 ring-line">
-          Porte: Todos
-        </span>
-        <span className="shrink-0 rounded-full bg-panel-2 px-3 py-1 text-cream-dim ring-1 ring-line">
-          Energia
-        </span>
-        <span className="shrink-0 rounded-full bg-panel-2 px-3 py-1 text-cream-dim ring-1 ring-line">
-          Raça
-        </span>
+        <button
+          onClick={() => {
+            setSoCompativeis((v) => !v);
+            setIndice(0);
+          }}
+          className={
+            soCompativeis
+              ? "flex shrink-0 items-center gap-1.5 rounded-full bg-glow px-3 py-1 font-medium text-ink"
+              : "flex shrink-0 items-center gap-1.5 rounded-full bg-panel-2 px-3 py-1 text-cream ring-1 ring-line"
+          }
+        >
+          <SlidersHorizontal className="size-3" /> Só compatíveis
+        </button>
+        {estilos.map((e) => (
+          <button
+            key={e}
+            onClick={() => {
+              setEstilo((atual) => (atual === e ? null : e));
+              setIndice(0);
+            }}
+            className={
+              estilo === e
+                ? "shrink-0 rounded-full bg-cream px-3 py-1 font-medium text-ink"
+                : "shrink-0 rounded-full bg-panel-2 px-3 py-1 text-cream-dim ring-1 ring-line"
+            }
+          >
+            {e}
+          </button>
+        ))}
       </div>
+
+      <p className="mt-2 px-5 font-mono text-[10px] text-cream-dim">
+        Base: {meuPet.nome} · energia {meuPet.energia} · {meuPet.estilo}
+      </p>
 
       <div className="relative mt-4 px-5">
         <div className="card-stack absolute inset-x-9 top-8 h-[420px] bg-panel-2 opacity-40 ring-1 ring-line" />
-        <div className="relative">{pet && <PetCard key={pet.id + indice} pet={pet} />}</div>
+        <div className="relative">
+          {pet ? (
+            <PetCard key={pet.id + indice} pet={pet} />
+          ) : (
+            <div className="card-stack grid h-[300px] place-items-center bg-panel px-8 text-center text-[12px] text-cream-dim ring-1 ring-line">
+              Nenhum pet com alta compatibilidade agora. Ajuste os filtros de energia ou estilo de
+              brincadeira.
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="mt-5 flex items-center justify-center gap-5">

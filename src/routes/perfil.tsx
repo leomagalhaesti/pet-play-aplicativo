@@ -2,7 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { AppShell, AppHeader } from "@/components/AppShell";
 import pet1 from "@/assets/pet-1.jpg";
-import { BadgeCheck, Crown, Star, Upload } from "lucide-react";
+import { conquistas, meuPet } from "@/lib/pets";
+import { BadgeCheck, Crown, Star, Upload, HeartPulse, Share2 } from "lucide-react";
 
 export const Route = createFileRoute("/perfil")({
   head: () => ({
@@ -82,6 +83,65 @@ function PerfilPage() {
         </div>
       </section>
 
+      <section className="mt-3 px-5">
+        <Link
+          to="/saude"
+          className="flex items-center gap-3 rounded-3xl bg-panel px-4 py-3.5 ring-1 ring-line"
+        >
+          <span className="grid size-9 shrink-0 place-items-center rounded-full bg-sage/15 ring-1 ring-sage/30">
+            <HeartPulse className="size-4 text-sage" />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-[13px] font-semibold text-cream">
+              Cartão de vacina &amp; prontuário
+            </span>
+            <span className="block text-[11px] text-cream-dim">
+              Lembretes de vacina, vermífugo e antipulgas · grátis
+            </span>
+          </span>
+          <span className="font-mono text-[10px] text-glow">abrir</span>
+        </Link>
+      </section>
+
+      <section className="mt-3 px-5">
+        <div className="rounded-3xl bg-panel p-4 ring-1 ring-line">
+          <div className="flex items-center justify-between">
+            <p className="font-mono text-[10px] tracking-[0.2em] text-cream-dim uppercase">
+              Passport Play
+            </p>
+            <button className="flex items-center gap-1.5 rounded-full bg-panel-2 px-2.5 py-1 text-[10px] text-cream ring-1 ring-line">
+              <Share2 className="size-3 text-glow" /> Compartilhar
+            </button>
+          </div>
+          <div className="mt-3 grid grid-cols-3 gap-2">
+            {conquistas.map((c) => {
+              const completa = c.progresso >= c.meta;
+              return (
+                <div
+                  key={c.id}
+                  className={
+                    completa
+                      ? "rounded-2xl bg-glow/15 p-2.5 text-center ring-1 ring-glow/40"
+                      : "rounded-2xl bg-panel-2 p-2.5 text-center ring-1 ring-line"
+                  }
+                >
+                  <span className={completa ? "text-[20px]" : "text-[20px] opacity-40"}>
+                    {c.emoji}
+                  </span>
+                  <p className="mt-1 text-[10px] leading-tight font-medium text-cream">{c.nome}</p>
+                  <p className="mt-0.5 font-mono text-[9px] text-cream-dim">
+                    {Math.min(c.progresso, c.meta)}/{c.meta}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+          <p className="mt-3 text-[11px] text-cream-dim">
+            Medalhas conquistadas por {meuPet.nome} em encontros e check-ins em locais credenciados.
+          </p>
+        </div>
+      </section>
+
       <section className="mt-3 space-y-2 px-5">
         <p className="font-mono text-[10px] tracking-[0.2em] text-cream-dim uppercase">
           Ficha do pet
@@ -89,7 +149,8 @@ function PerfilPage() {
         {[
           ["Raça", "SRD"],
           ["Porte", "Médio"],
-          ["Nível de energia", "Média"],
+          ["Nível de energia", meuPet.energia],
+          ["Estilo de brincadeira", meuPet.estilo],
           ["Castração", "Castrada"],
           ["Vacinas", "V10 e antirrábica em dia"],
           ["Temperamento", "Sociável, calma com filhotes"],

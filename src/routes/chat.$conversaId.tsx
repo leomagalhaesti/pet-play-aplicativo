@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { useState } from "react";
-import { conversas } from "@/lib/pets";
-import { ArrowLeft, ShieldCheck, Send, Star } from "lucide-react";
+import { conversas, petPoints } from "@/lib/pets";
+import { ArrowLeft, ShieldCheck, Send, Star, MapPin } from "lucide-react";
 
 export const Route = createFileRoute("/chat/$conversaId")({
   head: () => ({
@@ -99,6 +99,37 @@ function ConversaPage() {
           </div>
         ))}
       </div>
+
+      <section className="mx-4 mb-3 rounded-2xl bg-panel p-3.5 ring-1 ring-line">
+        <p className="font-mono text-[10px] tracking-[0.2em] text-cream-dim uppercase">
+          Sugestão de pet point
+        </p>
+        <p className="mt-1.5 text-[12px] text-cream-dim">
+          Que tal se encontrarem em um destes locais pet friendly no sábado?
+        </p>
+        <div className="mt-2.5 flex gap-2 overflow-x-auto pb-1">
+          {petPoints.slice(0, 3).map((p) => (
+            <button
+              key={p.id}
+              onClick={() =>
+                setMsgs((m) => [
+                  ...m,
+                  {
+                    de: "eu",
+                    texto: `Que tal nos encontrarmos no ${p.nome} (${p.distancia}) neste sábado às 9h?`,
+                    hora: "agora",
+                  },
+                ])
+              }
+              className="flex shrink-0 items-center gap-1.5 rounded-full bg-panel-2 px-3 py-1.5 text-[11px] text-cream ring-1 ring-line"
+            >
+              <MapPin className="size-3 text-glow" />
+              {p.nome}
+              <span className="font-mono text-[9px] text-cream-dim">{p.distancia}</span>
+            </button>
+          ))}
+        </div>
+      </section>
 
       <section className="mx-4 mb-3 rounded-2xl bg-panel-2 p-3.5 ring-1 ring-line">
         <p className="font-mono text-[10px] tracking-[0.2em] text-cream-dim uppercase">
