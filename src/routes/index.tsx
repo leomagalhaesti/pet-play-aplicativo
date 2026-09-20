@@ -37,8 +37,18 @@ function MatchPage() {
   const [indice, setIndice] = useState(0);
   const [curtidas, setCurtidas] = useState<string[]>([]);
 
-  const lista = useMemo(() => pets.filter((p) => p.modos.includes(modo)), [modo]);
-  const pet = lista[indice % lista.length];
+  const [soCompativeis, setSoCompativeis] = useState(true);
+  const [estilo, setEstilo] = useState<Estilo | null>(null);
+
+  const lista = useMemo(() => {
+    const base = pets
+      .filter((p) => p.modos.includes(modo))
+      .filter((p) => (estilo ? p.estilo === estilo : true))
+      .filter((p) => (soCompativeis ? compatibilidade(p) >= 70 : true));
+    return base.sort((a, b) => compatibilidade(b) - compatibilidade(a));
+  }, [modo, estilo, soCompativeis]);
+
+  const pet = lista.length ? lista[indice % lista.length] : undefined;
 
   const avancar = (curtiu: boolean) => {
     if (curtiu && pet) setCurtidas((c) => [...new Set([...c, pet.id])]);
