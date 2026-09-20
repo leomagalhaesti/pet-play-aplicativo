@@ -2,7 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { AppShell, AppHeader } from "@/components/AppShell";
 import pet1 from "@/assets/pet-1.jpg";
-import { BadgeCheck, Crown, Star, Upload } from "lucide-react";
+import { conquistas, meuPet } from "@/lib/pets";
+import { BadgeCheck, Crown, Star, Upload, HeartPulse, Share2 } from "lucide-react";
 
 export const Route = createFileRoute("/perfil")({
   head: () => ({
