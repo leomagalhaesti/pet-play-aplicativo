@@ -1,7 +1,8 @@
-import type { Pet } from "@/lib/pets";
-import { BadgeCheck, MapPin } from "lucide-react";
+import { compatibilidade, rotuloCompatibilidade, type Pet } from "@/lib/pets";
+import { BadgeCheck, MapPin, Activity } from "lucide-react";
 
 export function PetCard({ pet }: { pet: Pet }) {
+  const score = compatibilidade(pet);
   return (
     <article
       key={pet.id}
@@ -46,6 +47,24 @@ export function PetCard({ pet }: { pet: Pet }) {
         </div>
 
         <p className="mt-2 text-[12px] leading-snug text-cream-dim">{pet.bio}</p>
+
+        <div className="mt-3 rounded-2xl bg-panel-2 p-3 ring-1 ring-line">
+          <div className="flex items-center justify-between">
+            <span className="flex items-center gap-1.5 font-mono text-[10px] tracking-[0.15em] text-cream-dim uppercase">
+              <Activity className="size-3 text-glow" /> Compatibilidade de energia
+            </span>
+            <span className="font-mono text-[12px] font-medium text-glow">{score}%</span>
+          </div>
+          <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-ink">
+            <div
+              className={score >= 70 ? "h-full rounded-full bg-glow" : "h-full rounded-full bg-rose"}
+              style={{ width: `${score}%` }}
+            />
+          </div>
+          <p className="mt-1.5 text-[11px] text-cream-dim">
+            {rotuloCompatibilidade(score)} · {pet.estilo}
+          </p>
+        </div>
 
         <div className="mt-3 flex flex-wrap gap-2">
           <Chip>Porte {pet.porte}</Chip>
