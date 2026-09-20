@@ -5,13 +5,18 @@ import pet4 from "@/assets/pet-4.jpg";
 
 export type Modo = "social" | "reproducao";
 
+export type Energia = "Baixa" | "Média" | "Alta";
+
+export type Estilo = "Brinca forte" | "Calmo/Idoso" | "Corre com bolinha" | "Explorador tranquilo";
+
 export type Pet = {
   id: string;
   nome: string;
   raca: string;
   idade: string;
   porte: "Pequeno" | "Médio" | "Grande";
-  energia: "Baixa" | "Média" | "Alta";
+  energia: Energia;
+  estilo: Estilo;
   castrado: boolean;
   vacinado: boolean;
   verificado: boolean;
@@ -30,6 +35,7 @@ export const pets: Pet[] = [
     idade: "1 ano",
     porte: "Médio",
     energia: "Alta",
+    estilo: "Corre com bolinha",
     castrado: true,
     vacinado: true,
     verificado: true,
@@ -46,6 +52,7 @@ export const pets: Pet[] = [
     idade: "3 anos",
     porte: "Médio",
     energia: "Alta",
+    estilo: "Brinca forte",
     castrado: false,
     vacinado: true,
     verificado: true,
@@ -62,6 +69,7 @@ export const pets: Pet[] = [
     idade: "2 anos",
     porte: "Pequeno",
     energia: "Média",
+    estilo: "Explorador tranquilo",
     castrado: true,
     vacinado: true,
     verificado: false,
@@ -78,6 +86,7 @@ export const pets: Pet[] = [
     idade: "4 anos",
     porte: "Pequeno",
     energia: "Baixa",
+    estilo: "Calmo/Idoso",
     castrado: false,
     vacinado: true,
     verificado: true,
@@ -88,6 +97,47 @@ export const pets: Pet[] = [
     modos: ["social", "reproducao"],
   },
 ];
+
+/** Perfil do pet do usuário (base do algoritmo de compatibilidade). */
+export const meuPet = {
+  nome: "Amora",
+  energia: "Média" as Energia,
+  estilo: "Corre com bolinha" as Estilo,
+  porte: "Médio" as const,
+};
+
+const escalaEnergia: Record<Energia, number> = { Baixa: 0, Média: 1, Alta: 2 };
+
+/**
+ * Compatibilidade de energia + estilo de brincadeira (0-100).
+ * Quanto menor a diferença de energia e mais próximo o estilo, maior a chance
+ * do encontro dar certo.
+ */
+export function compatibilidade(pet: Pet, base = meuPet): number {
+  const difEnergia = Math.abs(escalaEnergia[pet.energia] - escalaEnergia[base.energia]);
+  let score = 100 - difEnergia * 26;
+
+  if (pet.estilo !== base.estilo) {
+    const intensos: Estilo[] = ["Brinca forte", "Corre com bolinha"];
+    const calmos: Estilo[] = ["Calmo/Idoso", "Explorador tranquilo"];
+    const mesmoGrupo =
+      (intensos.includes(pet.estilo) && intensos.includes(base.estilo)) ||
+      (calmos.includes(pet.estilo) && calmos.includes(base.estilo));
+    score -= mesmoGrupo ? 8 : 22;
+  }
+
+  if (pet.porte !== base.porte) score -= 6;
+  if (!pet.verificado) score -= 5;
+
+  return Math.max(12, Math.min(100, score));
+}
+
+export function rotuloCompatibilidade(score: number): string {
+  if (score >= 85) return "Match ideal";
+  if (score >= 70) return "Boa combinação";
+  if (score >= 50) return "Requer atenção";
+  return "Pouco compatível";
+}
 
 export type PetPoint = {
   id: string;
@@ -143,9 +193,7 @@ export const conversas: Conversa[] = [
     previa: "Posso enviar os exames da Nina hoje.",
     hora: "Ontem",
     naoLidas: 0,
-    mensagens: [
-      { de: "ele", texto: "Posso enviar os exames da Nina hoje.", hora: "Ontem" },
-    ],
+    mensagens: [{ de: "ele", texto: "Posso enviar os exames da Nina hoje.", hora: "Ontem" }],
   },
   {
     id: "c3",
@@ -156,8 +204,42 @@ export const conversas: Conversa[] = [
     previa: "O Tico prefere passeios no fim da tarde 🌇",
     hora: "Seg",
     naoLidas: 0,
-    mensagens: [
-      { de: "ele", texto: "O Tico prefere passeios no fim da tarde 🌇", hora: "Seg" },
-    ],
+    mensagens: [{ de: "ele", texto: "O Tico prefere passeios no fim da tarde 🌇", hora: "Seg" }],
   },
+];
+
+/** Prontuário digital: lembretes de vacinas, vermífugo e antipulgas. */
+export type Lembrete = {
+  id: string;
+  titulo: string;
+  tipo: "Vacina" | "Vermífugo" | "Antipulgas" | "Consulta";
+  data: string;
+  emDias: number;
+  feito: boolean;
+};
+
+export const lembretes: Lembrete[] = [
+  { id: "l1", titulo: "Antipulgas mensal", tipo: "Antipulgas", data: "22 set", emDias: 2, feito: false },
+  { id: "l2", titulo: "Vermífugo (dose única)", tipo: "Vermífugo", data: "05 out", emDias: 15, feito: false },
+  { id: "l3", titulo: "Reforço V10", tipo: "Vacina", data: "18 out", emDias: 28, feito: false },
+  { id: "l4", titulo: "Antirrábica anual", tipo: "Vacina", data: "12 ago", emDias: -39, feito: true },
+  { id: "l5", titulo: "Check-up no Vet Amigo", tipo: "Consulta", data: "30 nov", emDias: 71, feito: false },
+];
+
+/** Passport Play: medalhas de conquistas do pet. */
+export type Conquista = {
+  id: string;
+  nome: string;
+  descricao: string;
+  emoji: string;
+  progresso: number;
+  meta: number;
+};
+
+export const conquistas: Conquista[] = [
+  { id: "a1", nome: "Explorador de Parques", descricao: "Visite 5 pet points credenciados", emoji: "🌳", progresso: 5, meta: 5 },
+  { id: "a2", nome: "Sociável do Bairro", descricao: "Faça amizade com 8 pets diferentes", emoji: "🐾", progresso: 6, meta: 8 },
+  { id: "a3", nome: "10 Encontros Realizados", descricao: "Complete 10 dog dates", emoji: "🏅", progresso: 10, meta: 10 },
+  { id: "a4", nome: "Focinho Saudável", descricao: "Mantenha vacinas em dia por 12 meses", emoji: "💚", progresso: 9, meta: 12 },
+  { id: "a5", nome: "Café com Patas", descricao: "Check-in em 3 cafés pet friendly", emoji: "☕", progresso: 1, meta: 3 },
 ];
