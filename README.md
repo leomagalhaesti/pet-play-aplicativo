@@ -1,5 +1,7 @@
 # Pet&Play Aplicativo 
 
+> **Projeto proprietário.** Repositório público apenas para consulta e demonstração. Uso, cópia ou reprodução da ideia, do código ou da arquitetura sem autorização por escrito do autor não são permitidos — veja [LICENSE](LICENSE).
+
 PROJETO DE APLICATIVO MOBILE: "PetMatch & Play" (Nome Provisório)
 
 OBJETIVO DO PRODUTO:
@@ -50,9 +52,23 @@ DIRETRIZES DE DESIGN (UI/UX):
 
 This project was built with [Lovable](https://lovable.dev).
 
+## Documentação acadêmica
+
+- [Diagramas UML e modelo lógico do banco](docs/uml.md)
+- [DDL do banco SQLite](database/schema.sql)
+- [DML com dados de demonstração](database/seed.sql)
+
+O aplicativo atual é um protótipo frontend: as telas usam dados em memória e ainda não se conectam ao banco. O schema e os dados SQL são artefatos executáveis da modelagem proposta para o MVP.
+
+Para criar e preencher o banco local usando SQLite:
+
+```sh
+sqlite3 petplay.db < database/schema.sql
+sqlite3 petplay.db < database/seed.sql
+```
+
 ## Build with Lovable
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/1a919b8f-51e9-4476-9ca7-80ec2db4a62a).
 
 - **Ship faster**: describe what you want to build and Lovable handles the code.
 - **Stay in sync**: every change made in Lovable is committed straight to this repository.
