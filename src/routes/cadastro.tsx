@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { ArrowLeft, Check, Upload } from "lucide-react";
@@ -36,6 +36,7 @@ function CadastroPage() {
   const [emailTutor, setEmailTutor] = useState("");
   const [nomePet, setNomePet] = useState("");
   const [raca, setRaca] = useState("");
+  const navigate = useNavigate();
   const createPetMutation = useMutation({ mutationFn: () => createPet({
     data: { nome: nomePet || "Novo pet", raca: raca || "SRD", porte: porte as "Pequeno" | "Médio" | "Grande",
       energia: energia as "Baixa" | "Média" | "Alta", castrado, tutorNome: nomeTutor || "Tutor", tutorEmail: emailTutor || "demo@petplay.app" }
@@ -166,18 +167,12 @@ function CadastroPage() {
           </button>
         ) : (
           <button
-            onClick={() => void createPetMutation.mutateAsync()}
+            onClick={async () => { await createPetMutation.mutateAsync(); await navigate({ to: "/" }); }}
             disabled={createPetMutation.isPending}
             className="flex-1 rounded-full bg-glow py-3.5 text-center text-[13px] font-semibold text-ink disabled:opacity-60"
           >
             {createPetMutation.isPending ? "Salvando..." : "Salvar e começar"}
           </button>
-          <Link
-            to="/"
-            className="flex-1 rounded-full bg-glow py-3.5 text-center text-[13px] font-semibold text-ink"
-          >
-            Começar a buscar
-          </Link>
         )}
       </div>
     </div>
