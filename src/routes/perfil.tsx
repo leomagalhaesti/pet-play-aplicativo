@@ -1,8 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { AppShell, AppHeader } from "@/components/AppShell";
 import pet1 from "@/assets/pet-1.jpg";
-import { conquistas, meuPet } from "@/lib/pets";
+import { conquistas as conquistasBase, meuPet } from "@/lib/pets";
+import { getAchievements } from "@/lib/server-data";
 import { BadgeCheck, Crown, Star, Upload, HeartPulse, Share2 } from "lucide-react";
 
 export const Route = createFileRoute("/perfil")({
@@ -25,6 +27,10 @@ export const Route = createFileRoute("/perfil")({
 });
 
 function PerfilPage() {
+  const achievementsQuery = useQuery({ queryKey: ["conquistas"], queryFn: () => getAchievements() });
+  const conquistas = achievementsQuery.data?.source === "d1" && achievementsQuery.data.data.length
+    ? achievementsQuery.data.data
+    : conquistasBase;
   const [enviada, setEnviada] = useState(false);
 
   return (
