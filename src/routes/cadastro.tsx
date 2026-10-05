@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 import { ArrowLeft, Check, Upload } from "lucide-react";
+import { createPet } from "@/lib/server-data";
 
 export const Route = createFileRoute("/cadastro")({
   head: () => ({
@@ -30,6 +32,14 @@ function CadastroPage() {
   const [energia, setEnergia] = useState("Média");
   const [castrado, setCastrado] = useState(true);
   const [carteira, setCarteira] = useState(false);
+  const [nomeTutor, setNomeTutor] = useState("");
+  const [emailTutor, setEmailTutor] = useState("");
+  const [nomePet, setNomePet] = useState("");
+  const [raca, setRaca] = useState("");
+  const createPetMutation = useMutation({ mutationFn: () => createPet({
+    data: { nome: nomePet || "Novo pet", raca: raca || "SRD", porte: porte as "Pequeno" | "Médio" | "Grande",
+      energia: energia as "Baixa" | "Média" | "Alta", castrado, tutorNome: nomeTutor || "Tutor", tutorEmail: emailTutor || "demo@petplay.app" }
+  }) });
 
   return (
     <div className="relative mx-auto min-h-screen w-full max-w-[430px] sm:max-w-xl md:max-w-2xl lg:max-w-3xl bg-ink px-5 pt-6 pb-10 sm:px-8 lg:px-10 text-cream">
@@ -59,8 +69,8 @@ function CadastroPage() {
       {passo === 1 && (
         <section className="animate-fade-up mt-6 space-y-3">
           <h1 className="font-display text-[26px] leading-tight tracking-tight">Sobre você</h1>
-          <Campo label="Nome do tutor" placeholder="Como podemos te chamar?" />
-          <Campo label="E-mail" placeholder="voce@email.com" type="email" />
+          <Campo label="Nome do tutor" placeholder="Como podemos te chamar?" value={nomeTutor} onChange={setNomeTutor} />
+          <Campo label="E-mail" placeholder="voce@email.com" type="email" value={emailTutor} onChange={setEmailTutor} />
           <Campo label="Cidade" placeholder="Salvador, BA" />
         </section>
       )}
@@ -68,8 +78,8 @@ function CadastroPage() {
       {passo === 2 && (
         <section className="animate-fade-up mt-6 space-y-3">
           <h1 className="font-display text-[26px] leading-tight tracking-tight">Ficha do pet</h1>
-          <Campo label="Nome do pet" placeholder="Amora" />
-          <Campo label="Raça" placeholder="SRD, Golden, Siamês..." />
+          <Campo label="Nome do pet" placeholder="Amora" value={nomePet} onChange={setNomePet} />
+          <Campo label="Raça" placeholder="SRD, Golden, Siamês..." value={raca} onChange={setRaca} />
 
           <div>
             <p className="mb-2 font-mono text-[10px] tracking-[0.2em] text-cream-dim uppercase">
@@ -155,6 +165,13 @@ function CadastroPage() {
             Continuar
           </button>
         ) : (
+          <button
+            onClick={() => void createPetMutation.mutateAsync()}
+            disabled={createPetMutation.isPending}
+            className="flex-1 rounded-full bg-glow py-3.5 text-center text-[13px] font-semibold text-ink disabled:opacity-60"
+          >
+            {createPetMutation.isPending ? "Salvando..." : "Salvar e começar"}
+          </button>
           <Link
             to="/"
             className="flex-1 rounded-full bg-glow py-3.5 text-center text-[13px] font-semibold text-ink"
@@ -171,10 +188,14 @@ function Campo({
   label,
   placeholder,
   type = "text",
+  value,
+  onChange,
 }: {
   label: string;
   placeholder: string;
   type?: string;
+  value?: string;
+  onChange?: (value: string) => void;
 }) {
   return (
     <label className="block">
@@ -185,6 +206,8 @@ function Campo({
         type={type}
         maxLength={80}
         placeholder={placeholder}
+        value={value}
+        onChange={onChange ? (e) => onChange(e.target.value) : undefined}
         className="w-full rounded-2xl bg-panel px-4 py-3.5 text-[13px] text-cream ring-1 ring-line outline-none placeholder:text-cream-dim focus:ring-glow/50"
       />
     </label>
