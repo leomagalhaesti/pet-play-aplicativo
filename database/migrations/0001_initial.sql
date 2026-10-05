@@ -60,6 +60,7 @@ CREATE TABLE IF NOT EXISTS pet_points (
   nome TEXT NOT NULL,
   tipo TEXT NOT NULL,
   descricao TEXT,
+  distancia TEXT,
   latitude REAL,
   longitude REAL,
   ativo INTEGER NOT NULL DEFAULT 1 CHECK (ativo IN (0,1))
