@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { AppShell, AppHeader } from "@/components/AppShell";
 import { petPoints } from "@/lib/pets";
@@ -95,6 +95,12 @@ function MapaPage() {
           >
             {checkin === ponto.id ? "Check-in ativo · estou aqui" : "Fazer check-in agora"}
           </button>
+          <Link
+            to="/chat"
+            className="mt-2 block w-full rounded-full bg-panel-2 py-3 text-center text-[13px] font-semibold text-cream ring-1 ring-line"
+          >
+            Convidar um match para cá
+          </Link>
         </div>
       </section>
 

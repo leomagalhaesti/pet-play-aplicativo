@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { AppShell, AppHeader } from "@/components/AppShell";
 import { lembretes as lembretesBase, type Lembrete } from "@/lib/pets";
@@ -182,6 +182,14 @@ function SaudePage() {
           </p>
         </div>
       </section>
+      <div className="mx-5 mt-4 grid grid-cols-2 gap-2">
+        <Link to="/mapa" className="rounded-2xl bg-panel p-3 text-center text-[12px] text-cream ring-1 ring-line">
+          🩺 Achar veterinário
+        </Link>
+        <Link to="/perfil" className="rounded-2xl bg-panel p-3 text-center text-[12px] text-cream ring-1 ring-line">
+          🏅 Ver selo e medalhas
+        </Link>
+      </div>
     </AppShell>
   );
 }

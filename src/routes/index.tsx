@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { AppShell } from "@/components/AppShell";
 import { PetCard } from "@/components/PetCard";
-import { pets, compatibilidade, meuPet, type Modo, type Estilo } from "@/lib/pets";
+import { pets, conversas, compatibilidade, meuPet, type Modo, type Estilo } from "@/lib/pets";
 import { Heart, RotateCcw, Star, SlidersHorizontal } from "lucide-react";
 
 const estilos: Estilo[] = [
