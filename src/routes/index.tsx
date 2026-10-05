@@ -1,8 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/AppShell";
 import { PetCard } from "@/components/PetCard";
-import { pets, conversas, compatibilidade, meuPet, type Modo, type Estilo } from "@/lib/pets";
+import { pets as petsBase, conversas, compatibilidade, meuPet, type Modo, type Estilo } from "@/lib/pets";
+import { getPets } from "@/lib/server-data";
 import { Heart, RotateCcw, Star, SlidersHorizontal } from "lucide-react";
 
 const estilos: Estilo[] = [
@@ -33,6 +35,8 @@ export const Route = createFileRoute("/")({
 });
 
 function MatchPage() {
+  const petsQuery = useQuery({ queryKey: ["pets"], queryFn: () => getPets() });
+  const pets = petsQuery.data?.data ?? petsBase;
   const [modo, setModo] = useState<Modo>("social");
   const [indice, setIndice] = useState(0);
   const [curtidas, setCurtidas] = useState<string[]>([]);
