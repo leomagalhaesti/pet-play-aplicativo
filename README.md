@@ -70,7 +70,7 @@ Arquivos:
 - `wrangler.example.jsonc` — configuração de referência do binding `DB`.
 - `src/lib/database.ts` — contrato mínimo de acesso ao D1.
 
-O ID real do banco **não é colocado no Git**. Depois de criar o D1, substitua o placeholder em uma configuração local/Cloudflare pelo ID fornecido pela Cloudflare.
+O ID real do banco **não é colocado no Git**. Para ativar o banco remoto, copie `wrangler.example.jsonc` para `wrangler.jsonc` e substitua o placeholder pelo ID fornecido pela Cloudflare. O `wrangler.jsonc` local não deve ser commitado.
 
 Para desenvolvimento local:
 
@@ -105,3 +105,8 @@ cd <repository-name>
 npm i
 npm run dev
 ```
+
+
+### Fluxo da aplicação
+
+As telas principais já usam uma camada de servidor única (`src/lib/server-data.ts`). Quando o binding `DB` existe, leituras e gravações usam D1; quando ele ainda não existe, o app usa os dados demo atuais para que o MVP continue apresentável no preview. Assim, a apresentação não fica bloqueada pela configuração externa do Cloudflare.
