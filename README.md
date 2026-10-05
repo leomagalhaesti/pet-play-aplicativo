@@ -60,12 +60,33 @@ This project was built with [Lovable](https://lovable.dev).
 
 O aplicativo atual é um protótipo frontend: as telas usam dados em memória e ainda não se conectam ao banco. O schema e os dados SQL são artefatos executáveis da modelagem proposta para o MVP.
 
-Para criar e preencher o banco local usando SQLite:
+## Banco de dados do MVP
+
+O MVP está preparado para usar **Cloudflare D1**, um banco SQL serverless baseado em SQLite. A aplicação continua compatível com desenvolvimento local; em produção, o binding `DB` aponta para o banco D1. O acesso deve ocorrer pelo servidor, nunca diretamente pelo navegador.
+
+Arquivos:
+- `database/migrations/0001_initial.sql` — schema e índices do MVP.
+- `database/seed.sql` — dados mínimos para desenvolvimento/demo.
+- `wrangler.example.jsonc` — configuração de referência do binding `DB`.
+- `src/lib/database.ts` — contrato mínimo de acesso ao D1.
+
+O ID real do banco **não é colocado no Git**. Depois de criar o D1, substitua o placeholder em uma configuração local/Cloudflare pelo ID fornecido pela Cloudflare.
+
+Para desenvolvimento local:
 
 ```sh
-sqlite3 petplay.db < database/schema.sql
-sqlite3 petplay.db < database/seed.sql
+npm run db:migrate
+npm run db:seed
 ```
+
+Para aplicar no banco remoto:
+
+```sh
+npm run db:migrate:remote
+npm run db:seed:remote
+```
+
+O Cloudflare fornece D1 local para desenvolvimento e permite o mesmo binding `DB` no Worker em produção. citeturn0search0turn0search6
 
 ## Build with Lovable
 
