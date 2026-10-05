@@ -42,7 +42,7 @@ function mapPet(row: PetRow): Pet {
     id: row.id, nome: row.nome, raca: row.raca ?? "SRD", idade: row.idade ?? "não informado",
     porte: row.porte, energia: row.energia, estilo: row.estilo, castrado: Boolean(row.castrado),
     vacinado: Boolean(row.vacinado), verificado: Boolean(row.verificado), distancia: "próximo",
-    tutor: row.tutor, bio: row.bio ?? "", foto: row.foto_url ?? row.id, modos: parseModes(row.modos),
+    tutor: row.tutor, bio: row.bio ?? "", foto: fallbackPets.find((p) => p.id === row.id)?.foto ?? row.foto_url ?? "", modos: parseModes(row.modos),
   };
 }
 
@@ -61,7 +61,7 @@ export const getPetPoints = createServerFn({ method: "GET" }).handler(async () =
   const db = await getD1();
   if (!db) return { source: "demo" as const, data: fallbackPoints };
   const result = await db.prepare(`
-    SELECT pp.id, pp.nome, pp.tipo, COALESCE(pp.descricao, '') AS distancia,
+    SELECT pp.id, pp.nome, pp.tipo, COALESCE(pp.distancia, '') AS distancia,
            COUNT(c.id) AS checkins, COALESCE(pp.x, 50) AS x, COALESCE(pp.y, 50) AS y
     FROM pet_points pp LEFT JOIN checkins c ON c.pet_point_id = pp.id
     WHERE pp.ativo = 1 GROUP BY pp.id ORDER BY pp.nome
@@ -147,3 +147,23 @@ export const getDatabaseStatus = createServerFn({ method: "GET" }).handler(async
     return { connected: false, provider: "Cloudflare D1" as const };
   }
 });
+
+export const createPet = createServerFn({ method: "POST" })
+  .inputValidator((input: {
+    nome: string; raca: string; porte: Pet["porte"]; energia: Pet["energia"];
+    castrado: boolean; tutorNome: string; tutorEmail: string;
+  }) => input)
+  .handler(async ({ data }) => {
+    const db = await getD1();
+    if (!db) return { ok: false, source: "demo" as const };
+    const tutorId = "tutor-demo";
+    await db.prepare(
+      "INSERT OR IGNORE INTO tutors (id, nome, email) VALUES (?, ?, ?)"
+    ).bind(tutorId, data.tutorNome.trim().slice(0, 80) || "Tutor", data.tutorEmail.trim().slice(0, 120) || "demo@petplay.app").run();
+    const id = `pet-${Date.now()}`;
+    await db.prepare(`
+      INSERT INTO pets (id, tutor_id, nome, especie, raca, idade, porte, energia, estilo, castrado, vacinado, verificado, bio, foto_url)
+      VALUES (?, ?, ?, 'cachorro', ?, 'não informado', ?, ?, 'Corre com bolinha', ?, 0, 0, '', NULL)
+    `).bind(id, tutorId, data.nome.trim().slice(0, 80), data.raca.trim().slice(0, 80), data.porte, data.energia, data.castrado ? 1 : 0).run();
+    return { ok: true, source: "d1" as const, id };
+  });
