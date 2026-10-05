@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { AppShell, AppHeader } from "@/components/AppShell";
 import { lembretes as lembretesBase, type Lembrete } from "@/lib/pets";
+import { getReminders, toggleReminder } from "@/lib/server-data";
 import { BadgeCheck, Bell, CalendarPlus, Syringe, Pill, Bug, Stethoscope } from "lucide-react";
 
 export const Route = createFileRoute("/saude")({
@@ -31,8 +33,13 @@ const icones = {
 } as const;
 
 function SaudePage() {
+  const remindersQuery = useQuery({ queryKey: ["lembretes"], queryFn: () => getReminders() });
   const [itens, setItens] = useState<Lembrete[]>(lembretesBase);
   const [novo, setNovo] = useState("");
+  const toggleMutation = useMutation({ mutationFn: (value: { id: string; feito: boolean }) => toggleReminder({ data: value }) });
+  useEffect(() => {
+    if (remindersQuery.data?.source === "d1") setItens(remindersQuery.data.data);
+  }, [remindersQuery.data]);
 
   const proximos = useMemo(
     () => itens.filter((l) => !l.feito).sort((a, b) => a.emDias - b.emDias),
@@ -40,8 +47,15 @@ function SaudePage() {
   );
   const concluidos = itens.filter((l) => l.feito);
 
-  const alternar = (id: string) =>
-    setItens((l) => l.map((i) => (i.id === id ? { ...i, feito: !i.feito } : i)));
+  const alternar = (id: string) => {
+    setItens((l) => {
+      const atual = l.find((i) => i.id === id);
+      if (!atual) return l;
+      const feito = !atual.feito;
+      void toggleMutation.mutateAsync({ id, feito }).catch(() => undefined);
+      return l.map((i) => (i.id === id ? { ...i, feito } : i));
+    });
+  };
 
   const adicionar = () => {
     const t = novo.trim().slice(0, 60);
