@@ -32,7 +32,7 @@ function CadastroPage() {
   const [carteira, setCarteira] = useState(false);
 
   return (
-    <div className="relative mx-auto min-h-screen w-full max-w-[430px] bg-ink px-5 pt-6 pb-10 text-cream">
+    <div className="relative mx-auto min-h-screen w-full max-w-[430px] md:max-w-2xl bg-ink px-5 pt-6 pb-10 text-cream">
       <div className="flex items-center gap-3">
         <Link to="/perfil" className="grid size-9 place-items-center rounded-full bg-panel-2 ring-1 ring-line">
           <ArrowLeft className="size-4" />

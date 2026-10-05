@@ -49,7 +49,7 @@ function ConversaPage() {
   };
 
   return (
-    <div className="relative mx-auto flex min-h-screen w-full max-w-[430px] flex-col bg-ink text-cream">
+    <div className="relative mx-auto flex min-h-screen w-full max-w-[430px] md:max-w-2xl flex-col bg-ink text-cream">
       <header className="flex items-center gap-3 border-b border-line px-4 pt-6 pb-3">
         <Link to="/chat" className="grid size-9 place-items-center rounded-full bg-panel-2 ring-1 ring-line">
           <ArrowLeft className="size-4" />
