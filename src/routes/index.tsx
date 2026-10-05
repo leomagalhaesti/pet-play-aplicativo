@@ -150,8 +150,8 @@ function MatchPage() {
         Base: {meuPet.nome} · energia {meuPet.energia} · {meuPet.estilo}
       </p>
 
-      <div className="relative mt-4 px-5">
-        <div className="card-stack absolute inset-x-9 top-8 h-[420px] bg-panel-2 opacity-40 ring-1 ring-line" />
+      <div className="relative mt-4 px-5 sm:px-6 md:px-8">
+        <div className="card-stack absolute inset-x-9 top-8 h-[420px] sm:h-[480px] md:h-[520px] bg-panel-2 opacity-40 ring-1 ring-line" />
         <div className="relative">
           {pet ? (
             <PetCard key={pet.id + indice} pet={pet} />
@@ -189,7 +189,7 @@ function MatchPage() {
       </div>
 
       {ultimoMatch && (
-        <div className="mx-5 mt-4 flex items-center justify-between gap-3 rounded-2xl bg-glow/15 p-3 ring-1 ring-glow/40">
+        <div className="mx-5 mt-4 flex flex-col items-stretch justify-between gap-3 sm:flex-row sm:items-center rounded-2xl bg-glow/15 p-3 ring-1 ring-glow/40">
           <p className="text-[12px] text-cream">
             É um match com <b>{ultimoMatch.nome}</b>! 🐾
           </p>
@@ -197,7 +197,7 @@ function MatchPage() {
             <Link
               to="/chat/$conversaId"
               params={{ conversaId: conversaDoMatch.id }}
-              className="shrink-0 rounded-full bg-glow px-3 py-1.5 text-[11px] font-semibold text-ink"
+              className="w-full shrink-0 rounded-full bg-glow px-3 py-1.5 text-center sm:w-auto text-[11px] font-semibold text-ink"
             >
               Abrir chat
             </Link>

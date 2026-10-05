@@ -74,7 +74,7 @@ function SaudePage() {
             Carteira de vacinação verificada em 12/08. Válida até 12/08 do próximo ano — seu perfil
             exibe o selo de vacinação verificada.
           </p>
-          <div className="mt-3 grid grid-cols-3 gap-2 text-center">
+          <div className="mt-3 grid grid-cols-1 gap-2 text-center sm:grid-cols-3">
             {[
               ["V10", "em dia"],
               ["Antirrábica", "em dia"],
@@ -182,7 +182,7 @@ function SaudePage() {
           </p>
         </div>
       </section>
-      <div className="mx-5 mt-4 grid grid-cols-2 gap-2">
+      <div className="mx-5 mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
         <Link to="/mapa" className="rounded-2xl bg-panel p-3 text-center text-[12px] text-cream ring-1 ring-line">
           🩺 Achar veterinário
         </Link>

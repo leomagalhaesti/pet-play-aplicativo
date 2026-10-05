@@ -32,13 +32,13 @@ function PerfilPage() {
       <AppHeader title="MEU PET" subtitle="ficha e reputação" />
 
       <div className="mt-4 px-5">
-        <div className="flex items-center gap-4 rounded-3xl bg-panel p-4 ring-1 ring-line">
+        <div className="flex flex-col items-start gap-4 rounded-3xl sm:flex-row sm:items-center bg-panel p-4 ring-1 ring-line">
           <img
             src={pet1}
             alt="Foto do meu pet"
             width={768}
             height={768}
-            className="size-20 rounded-2xl object-cover"
+            className="size-20 shrink-0 rounded-2xl object-cover"
           />
           <div className="min-w-0">
             <p className="font-display text-[24px] leading-none tracking-tight">Amora</p>
@@ -113,7 +113,7 @@ function PerfilPage() {
               <Share2 className="size-3 text-glow" /> Compartilhar
             </button>
           </div>
-          <div className="mt-3 grid grid-cols-3 gap-2">
+          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
             {conquistas.map((c) => {
               const completa = c.progresso >= c.meta;
               return (

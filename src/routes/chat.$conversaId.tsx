@@ -49,7 +49,7 @@ function ConversaPage() {
   };
 
   return (
-    <div className="relative mx-auto flex min-h-screen w-full max-w-[430px] md:max-w-2xl flex-col bg-ink text-cream">
+    <div className="relative mx-auto flex min-h-screen w-full max-w-[430px] sm:max-w-xl md:max-w-2xl lg:max-w-4xl flex-col bg-ink text-cream">
       <header className="flex items-center gap-3 border-b border-line px-4 pt-6 pb-3">
         <Link to="/chat" className="grid size-9 place-items-center rounded-full bg-panel-2 ring-1 ring-line">
           <ArrowLeft className="size-4" />
@@ -81,8 +81,8 @@ function ConversaPage() {
             <div
               className={
                 m.de === "eu"
-                  ? "max-w-[78%] rounded-2xl rounded-br-md bg-glow px-3.5 py-2.5 text-[13px] text-ink"
-                  : "max-w-[78%] rounded-2xl rounded-bl-md bg-panel px-3.5 py-2.5 text-[13px] text-cream ring-1 ring-line"
+                  ? "max-w-[88%] sm:max-w-[72%] md:max-w-[65%] rounded-2xl rounded-br-md bg-glow px-3.5 py-2.5 text-[13px] text-ink"
+                  : "max-w-[88%] sm:max-w-[72%] md:max-w-[65%] rounded-2xl rounded-bl-md bg-panel px-3.5 py-2.5 text-[13px] text-cream ring-1 ring-line"
               }
             >
               {m.texto}

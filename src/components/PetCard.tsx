@@ -8,7 +8,7 @@ export function PetCard({ pet }: { pet: Pet }) {
       key={pet.id}
       className="card-stack animate-card-in relative overflow-hidden bg-panel ring-1 ring-line"
     >
-      <div className="relative h-[290px]">
+      <div className="relative h-[290px] sm:h-[340px] md:h-[380px] lg:h-[420px]">
         <img
           src={pet.foto}
           alt={`${pet.nome}, ${pet.raca}`}
@@ -36,8 +36,8 @@ export function PetCard({ pet }: { pet: Pet }) {
       </div>
 
       <div className="px-4 pt-1 pb-4">
-        <div className="flex items-end justify-between">
-          <h2 className="font-display text-[30px] leading-none tracking-tight text-cream">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <h2 className="font-display text-[30px] sm:text-[34px] leading-none tracking-tight text-cream">
             {pet.nome}
           </h2>
           <div className="text-right">

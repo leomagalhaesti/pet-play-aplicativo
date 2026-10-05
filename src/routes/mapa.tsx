@@ -41,7 +41,7 @@ function MapaPage() {
             width={1024}
             height={1280}
             loading="lazy"
-            className="h-[320px] w-full object-cover"
+            className="h-[320px] w-full object-cover sm:h-[380px] md:h-[420px] lg:h-[460px]"
           />
           <div className="absolute inset-0 bg-ink/30" />
           {petPoints.map((p) => (
@@ -75,7 +75,7 @@ function MapaPage() {
         <div className="animate-fade-up rounded-3xl bg-panel p-4 ring-1 ring-line">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <h2 className="font-display text-[22px] leading-none tracking-tight">{ponto.nome}</h2>
+              <h2 className="font-display text-[22px] sm:text-[26px] leading-none" tracking-tight">{ponto.nome}</h2>
               <p className="mt-1.5 text-[12px] text-cream-dim">
                 {ponto.tipo} · {ponto.distancia}
               </p>
