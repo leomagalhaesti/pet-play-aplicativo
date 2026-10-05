@@ -193,13 +193,22 @@ function MatchPage() {
           <p className="text-[12px] text-cream">
             É um match com <b>{ultimoMatch.nome}</b>! 🐾
           </p>
-          <Link
-            to={conversaDoMatch ? "/chat/$conversaId" : "/chat"}
-            params={conversaDoMatch ? { conversaId: conversaDoMatch.id } : undefined}
-            className="shrink-0 rounded-full bg-glow px-3 py-1.5 text-[11px] font-semibold text-ink"
-          >
-            Abrir chat
-          </Link>
+          {conversaDoMatch ? (
+            <Link
+              to="/chat/$conversaId"
+              params={{ conversaId: conversaDoMatch.id }}
+              className="shrink-0 rounded-full bg-glow px-3 py-1.5 text-[11px] font-semibold text-ink"
+            >
+              Abrir chat
+            </Link>
+          ) : (
+            <Link
+              to="/chat"
+              className="shrink-0 rounded-full bg-glow px-3 py-1.5 text-[11px] font-semibold text-ink"
+            >
+              Abrir chat
+            </Link>
+          )}
         </div>
       )}
 
