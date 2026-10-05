@@ -86,7 +86,7 @@ npm run db:migrate:remote
 npm run db:seed:remote
 ```
 
-O Cloudflare fornece D1 local para desenvolvimento e permite o mesmo binding `DB` no Worker em produção. citeturn0search0turn0search6
+O Cloudflare fornece D1 local para desenvolvimento e permite o mesmo binding `DB` no Worker em produção.
 
 ## Build with Lovable
 
