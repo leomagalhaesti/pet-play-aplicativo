@@ -115,7 +115,7 @@ export const getConversations = createServerFn({ method: "GET" }).handler(async 
     `).bind(row.id).all<{ remetente:"eu"|"ele"; texto:string; hora:string }>();
     data.push({
       id: row.id, petId: row.pet_id, nome: row.nome, tutor: row.tutor,
-      foto: row.foto_url ?? row.pet_id, previa: row.previa ?? "", hora: row.hora ?? "",
+      foto: fallbackPets.find((p) => p.id === row.pet_id)?.foto ?? row.foto_url ?? "", previa: row.previa ?? "", hora: row.hora ?? "",
       naoLidas: Number(row.nao_lidas ?? 0),
       mensagens: messages.results.map((m) => ({ de:m.remetente, texto:m.texto, hora:m.hora })),
     });
