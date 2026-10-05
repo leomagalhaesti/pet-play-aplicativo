@@ -167,3 +167,13 @@ export const createPet = createServerFn({ method: "POST" })
     `).bind(id, tutorId, data.nome.trim().slice(0, 80), data.raca.trim().slice(0, 80), data.porte, data.energia, data.castrado ? 1 : 0).run();
     return { ok: true, source: "d1" as const, id };
   });
+
+export const getAchievements = createServerFn({ method: "GET" }).handler(async () => {
+  const db = await getD1();
+  if (!db) return { source: "demo" as const, data: [] as { id:string; nome:string; descricao:string; emoji:string; progresso:number; meta:number }[] };
+  const result = await db.prepare(`
+    SELECT id, nome, descricao, COALESCE(emoji, '🏅') AS emoji, progresso, meta
+    FROM conquistas WHERE pet_id = 'amora' ORDER BY id
+  `).all<{ id:string; nome:string; descricao:string; emoji:string; progresso:number; meta:number }>();
+  return { source: "d1" as const, data: result.results };
+});
