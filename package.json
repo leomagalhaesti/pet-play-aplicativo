@@ -10,10 +10,10 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "db:migrate": "wrangler d1 migrations apply petplay-mvp --local",
-    "db:migrate:remote": "wrangler d1 migrations apply petplay-mvp --remote",
-    "db:seed": "wrangler d1 execute petplay-mvp --local --file=database/seed.sql",
-    "db:seed:remote": "wrangler d1 execute petplay-mvp --remote --file=database/seed.sql",
+    "db:migrate": "wrangler --config=wrangler.jsonc d1 migrations apply petplay-mvp --local",
+    "db:migrate:remote": "wrangler --config=wrangler.jsonc d1 migrations apply petplay-mvp --remote",
+    "db:seed": "wrangler --config=wrangler.jsonc d1 execute petplay-mvp --local --file=database/seed.sql",
+    "db:seed:remote": "wrangler --config=wrangler.jsonc d1 execute petplay-mvp --remote --file=database/seed.sql",
     "deploy": "npm run build && wrangler deploy"
   },
   "overrides": {
