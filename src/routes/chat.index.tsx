@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { AppShell, AppHeader } from "@/components/AppShell";
-import { conversas } from "@/lib/pets";
+import { conversas as conversasBase } from "@/lib/pets";
+import { getConversations } from "@/lib/server-data";
 import { ShieldCheck } from "lucide-react";
 
 export const Route = createFileRoute("/chat/")({
@@ -23,6 +25,9 @@ export const Route = createFileRoute("/chat/")({
 });
 
 function ChatPage() {
+  const conversaQuery = useQuery({ queryKey: ["conversas"], queryFn: () => getConversations() });
+  const conversas = conversaQuery.data?.data ?? conversasBase;
+
   return (
     <AppShell>
       <AppHeader title="CONVERSAS" subtitle="liberadas após o match" />
