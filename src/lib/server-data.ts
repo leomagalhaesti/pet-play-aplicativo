@@ -51,7 +51,7 @@ export const getPets = createServerFn({ method: "GET" }).handler(async () => {
   if (!db) return { source: "demo" as const, data: fallbackPets };
   const result = await db.prepare(`
     SELECT p.*, t.nome AS tutor
-    FROM pets p JOIN tutors t ON t.id = p.tutor_id
+    FROM pets p JOIN tutors t ON t.id = p.tutor_id WHERE p.id <> 'amora'
     ORDER BY p.verificado DESC, p.nome ASC
   `).all<PetRow>();
   return { source: "d1" as const, data: result.results.map(mapPet) };
@@ -74,7 +74,7 @@ export const getReminders = createServerFn({ method: "GET" }).handler(async () =
   if (!db) return { source: "demo" as const, data: fallbackLembretes };
   const result = await db.prepare(`
     SELECT id, titulo, tipo, data, COALESCE(em_dias, 999) AS em_dias, feito
-    FROM lembretes_saude WHERE pet_id = 'biscuit' ORDER BY feito ASC, data ASC
+    FROM lembretes_saude WHERE pet_id = 'amora' ORDER BY feito ASC, data ASC
   `).all<ReminderRow>();
   return {
     source: "d1" as const,
@@ -98,7 +98,7 @@ export const getConversations = createServerFn({ method: "GET" }).handler(async 
     SELECT c.id, p.id AS pet_id, p.nome, t.nome AS tutor, p.foto_url,
       (SELECT texto FROM mensagens m WHERE m.conversa_id = c.id ORDER BY m.enviada_em DESC LIMIT 1) AS previa,
       (SELECT substr(enviada_em, 12, 5) FROM mensagens m WHERE m.conversa_id = c.id ORDER BY m.enviada_em DESC LIMIT 1) AS hora,
-      (SELECT COUNT(*) FROM mensagens m WHERE m.conversa_id = c.id AND m.lida = 0 AND m.remetente_pet_id <> 'biscuit') AS nao_lidas
+      (SELECT COUNT(*) FROM mensagens m WHERE m.conversa_id = c.id AND m.lida = 0 AND m.remetente_pet_id <> 'amora') AS nao_lidas
     FROM conversas c
     JOIN matches mt ON mt.id = c.match_id
     JOIN pets p ON p.id = mt.outro_pet_id
@@ -109,7 +109,7 @@ export const getConversations = createServerFn({ method: "GET" }).handler(async 
   const data: Conversa[] = [];
   for (const row of conversations.results) {
     const messages = await db.prepare(`
-      SELECT CASE WHEN remetente_pet_id = 'biscuit' THEN 'eu' ELSE 'ele' END AS remetente, texto,
+      SELECT CASE WHEN remetente_pet_id = 'amora' THEN 'eu' ELSE 'ele' END AS remetente, texto,
              substr(enviada_em, 12, 5) AS hora
       FROM mensagens WHERE conversa_id = ? ORDER BY enviada_em ASC
     `).bind(row.id).all<{ remetente:"eu"|"ele"; texto:string; hora:string }>();
@@ -132,7 +132,7 @@ export const sendMessage = createServerFn({ method: "POST" })
     const id = `msg-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
     await db.prepare(`
       INSERT INTO mensagens (id, conversa_id, remetente_pet_id, texto, lida)
-      VALUES (?, ?, 'biscuit', ?, 1)
+      VALUES (?, ?, 'amora', ?, 1)
     `).bind(id, data.conversaId, texto).run();
     return { ok: true, source: "d1" as const, id };
   });
