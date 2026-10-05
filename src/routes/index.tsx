@@ -50,7 +50,7 @@ function MatchPage() {
       .filter((p) => (estilo ? p.estilo === estilo : true))
       .filter((p) => (soCompativeis ? compatibilidade(p) >= 70 : true));
     return base.sort((a, b) => compatibilidade(b) - compatibilidade(a));
-  }, [modo, estilo, soCompativeis]);
+  }, [pets, modo, estilo, soCompativeis]);
 
   const pet = lista.length ? lista[indice % lista.length] : undefined;
 
