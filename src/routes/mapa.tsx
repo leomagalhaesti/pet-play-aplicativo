@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { AppShell, AppHeader } from "@/components/AppShell";
-import { petPoints } from "@/lib/pets";
+import { petPoints as petPointsBase } from "@/lib/pets";
+import { getPetPoints } from "@/lib/server-data";
 import mapaDark from "@/assets/map-dark.jpg";
 import { MapPin, Users } from "lucide-react";
 
@@ -25,9 +27,11 @@ export const Route = createFileRoute("/mapa")({
 });
 
 function MapaPage() {
-  const [ativo, setAtivo] = useState(petPoints[0]!.id);
+  const pointsQuery = useQuery({ queryKey: ["pet-points"], queryFn: () => getPetPoints() });
+  const petPoints = pointsQuery.data?.data ?? petPointsBase;
+  const [ativo, setAtivo] = useState(petPoints[0]?.id ?? "p1");
   const [checkin, setCheckin] = useState<string | null>(null);
-  const ponto = petPoints.find((p) => p.id === ativo)!;
+  const ponto = petPoints.find((p) => p.id === ativo) ?? petPoints[0]!;
 
   return (
     <AppShell>
@@ -75,7 +79,7 @@ function MapaPage() {
         <div className="animate-fade-up rounded-3xl bg-panel p-4 ring-1 ring-line">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <h2 className="font-display text-[22px] sm:text-[26px] leading-none" tracking-tight">{ponto.nome}</h2>
+              <h2 className="font-display text-[22px] sm:text-[26px] leading-none tracking-tight">{ponto.nome}</h2>
               <p className="mt-1.5 text-[12px] text-cream-dim">
                 {ponto.tipo} · {ponto.distancia}
               </p>
