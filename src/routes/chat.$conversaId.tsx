@@ -1,6 +1,8 @@
 import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { useState } from "react";
-import { conversas, petPoints } from "@/lib/pets";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { conversas as conversasBase, petPoints } from "@/lib/pets";
+import { getConversations, sendMessage } from "@/lib/server-data";
 import { ArrowLeft, ShieldCheck, Send, Star, MapPin } from "lucide-react";
 
 export const Route = createFileRoute("/chat/$conversaId")({
@@ -28,8 +30,10 @@ export const Route = createFileRoute("/chat/$conversaId")({
 
 function ConversaPage() {
   const { conversaId } = useParams({ from: "/chat/$conversaId" });
-  const conversa = conversas.find((c) => c.id === conversaId);
+  const conversaQuery = useQuery({ queryKey: ["conversas"], queryFn: () => getConversations() });
+  const conversa = (conversaQuery.data?.data ?? conversasBase).find((c) => c.id === conversaId);
   const [msgs, setMsgs] = useState(conversa?.mensagens ?? []);
+  const sendMutation = useMutation({ mutationFn: (value: string) => sendMessage({ data: { conversaId, texto: value } }) });
   const [texto, setTexto] = useState("");
   const [avaliacao, setAvaliacao] = useState(0);
 
@@ -45,6 +49,7 @@ function ConversaPage() {
     const t = texto.trim().slice(0, 500);
     if (!t) return;
     setMsgs((m) => [...m, { de: "eu", texto: t, hora: "agora" }]);
+    void sendMutation.mutateAsync(t).catch(() => undefined);
     setTexto("");
   };
 
