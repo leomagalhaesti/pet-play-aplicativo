@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { AppShell, AppHeader } from "@/components/AppShell";
 import pet1 from "@/assets/pet-1.jpg";
