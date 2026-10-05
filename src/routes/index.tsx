@@ -50,8 +50,16 @@ function MatchPage() {
 
   const pet = lista.length ? lista[indice % lista.length] : undefined;
 
+  const [ultimoMatch, setUltimoMatch] = useState<(typeof pets)[number] | null>(null);
+  const conversaDoMatch = ultimoMatch
+    ? conversas.find((c) => c.petId === ultimoMatch.id)
+    : undefined;
+
   const avancar = (curtiu: boolean) => {
-    if (curtiu && pet) setCurtidas((c) => [...new Set([...c, pet.id])]);
+    if (curtiu && pet) {
+      setCurtidas((c) => [...new Set([...c, pet.id])]);
+      setUltimoMatch(pet);
+    }
     setIndice((i) => i + 1);
   };
 
@@ -179,6 +187,21 @@ function MatchPage() {
           <Star className="size-4" />
         </button>
       </div>
+
+      {ultimoMatch && (
+        <div className="mx-5 mt-4 flex items-center justify-between gap-3 rounded-2xl bg-glow/15 p-3 ring-1 ring-glow/40">
+          <p className="text-[12px] text-cream">
+            É um match com <b>{ultimoMatch.nome}</b>! 🐾
+          </p>
+          <Link
+            to={conversaDoMatch ? "/chat/$conversaId" : "/chat"}
+            params={conversaDoMatch ? { conversaId: conversaDoMatch.id } : undefined}
+            className="shrink-0 rounded-full bg-glow px-3 py-1.5 text-[11px] font-semibold text-ink"
+          >
+            Abrir chat
+          </Link>
+        </div>
+      )}
 
       <p className="mt-4 px-8 text-center font-mono text-[10px] leading-relaxed text-cream-dim">
         {modo === "social"
